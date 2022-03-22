@@ -1,17 +1,22 @@
 class NegociacaoController {
-    adiciona(event) {
-        // cancelando a submissão do formulário
-        event.preventDefault();
+  constructor() {
+    let $ = document.querySelector.bind(document);
 
-        let $ = document.querySelector.bind(document);
-        
-        // buscando os elementos
-        let inputData = $('#data');
-        let inputQuantidade = $('#quantidade');
-        let inputValor = $('#valor');
+    // buscando os elementos
+    this._inputData = $("#data");
+    this._inputQuantidade = $("#quantidade");
+    this._inputValor = $("#valor");
+  }
 
-        console.log(inputData.value);
-        console.log(inputQuantidade.value);
-        console.log(inputValor.value);
-    }
+  adiciona(event) {
+    // cancelando a submissão do formulário
+    event.preventDefault();
+    
+    let data = new Date(...this._inputData.value.split("-").map((item, indice) => item - indice % 2));
+
+    let negociacao = new Negociacao(data, parseInt(this._inputQuantidade.value), parseFloat(this._inputValor.value));
+
+    console.log(negociacao);
+
+  }
 }
