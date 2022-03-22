@@ -1,22 +1,22 @@
 class Negociacao {
-    constructor(data, quantidade, valor) {
-        // cada parâmetro recebido será atribuído às propiedades da classe
-        this._data = data; //data atual
-        this._quantidade = quantidade;
-        this._valor = valor;
+    constructor(_data, _quantidade, _valor) {
+
+        Object.assign(this, { _quantidade, _valor});
+         this._data = new Date(data.getTime());//usar getTime para garantir imutabilidade
+        Object.freeze(this);
     }
 
-    getVolume() {
+    get volume() {
         return this._quantidade * this._valor;
     }
 
-    getData() {
-        return this._data;
+    get data() {
+        return new Date(this._data.getTime());
     }
-    getQuantidade() {
+    get quantidade() {
         return this._quantidade;
     }
-    getValor() {
+    get valor() {
         return this._valor;
     }
 }
