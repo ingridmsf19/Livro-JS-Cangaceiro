@@ -1,5 +1,5 @@
 // criando a instância do controller
-let controller = new NegociacaoController();
+const controller = new NegociacaoController();
 
 // passando diretamente controller.adiciona
 
