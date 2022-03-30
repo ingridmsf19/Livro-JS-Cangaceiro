@@ -9,13 +9,9 @@ class NegociacaoController {
 
         this._negociacoes = new Bind(new Negociacoes(), new NegociacoesView('#negociacoes'), 'adiciona', 'esvazia');
 
-        this._negociacoesView = new NegociacoesView('#negociacoes');
-        this._negociacoesView.update(this._negociacoes);
-
         this._mensagem = new Bind(new Mensagem(), new MensagemView('#mensagemView'), 'texto');
 
-        this._mensagemView = new MensagemView('#mensagemView');
-        this._mensagemView.update(this._mensagem);
+        this._service = new NegociacaoService();
     }
     adiciona(event) {
 
@@ -62,21 +58,14 @@ class NegociacaoController {
     }
 
     importarNegociacoes() {
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('GET', 'negociacoes/semana');
-
-        xhr.onreadystatechange = () => {
-            if(xhr.readyState == 4) {
-                if(xhr.status == 200) {
-                    JSON.parse(xhr.responseText).map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor)).forEach(negociacao => this._negociacoes.adiciona(negociacao));
-                    this._mensagem.texto = "Negociações importadas com sucesso!";
-                }else {
-                    console.log(xhr.responseText);
-                    this._mensagem.texto = 'Não foi possível obter as negociações da semana';
-                }
+        this._service.obterNegociacaoDaSemana((err, negociacoes) => {
+            if(err) {
+                this._mensagem.texto = 'Não foi possível obter nas negociações da semana';
+                return;
             }
-        };
-        xhr.send(); // executa a requisição configurada
+            negociacoes.forEach(negociacao => this._negociacoes.adiciona(negociacao));
+
+            this._mensagem.texto = 'Negociações importadas com sucesso';
+        });
     }
 }
