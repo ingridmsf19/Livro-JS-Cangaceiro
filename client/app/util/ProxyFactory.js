@@ -1,29 +1,39 @@
-class proxyFactory {
+class ProxyFactory {
+    
   static create(objeto, props, armadilha) {
-    // recebe objeto como parametro
-    return new Proxy(objeto, {
-      get(target, prop, receiver) {
-        // usa o array props para realizar o includes
-        if (proxyFactory._ehFuncao(target[prop]) && props.includes(prop)) {
-          return function () {
-            console.log(`"${prop}"disparou	a armadilha`);
-            target[prop].apply(target, arguments);
-            armadilha(target);
-          }
-        } else {
-          return target[prop];
-        }
-      },
+      
+      return new Proxy(objeto, {
+           
+          get(target, prop, receiver) {
+              
+              if(ProxyFactory._ehFuncao(target[prop]) 
+                  && props.includes(prop)) {
+              
+                  return function() {
 
-      set(target, prop, value, receiver) {
-        const updated = Reflect.set(target, prop, value)
-        if (props.includes(prop)) armadilha(target);
-        return updated;
-      },
-    });
-  }
+                      console.log(`"${prop}" disparou a armadilha`);
+                      target[prop].apply(target, arguments);
+                      armadilha(target);
+                  }
+
+              } else {
+
+                  return target[prop];
+              }
+          },
+
+           set(target, prop, value, receiver) {
+              
+               const updated = Reflect.set(target, prop, value);
+               if(props.includes(prop)) armadilha(target);
+               return updated;
+           }
+           
+       });
+ }
 
   static _ehFuncao(fn) {
-    return typeof (fn) == typeof (Function);
+
+      return typeof(fn) == typeof(Function);
   }
 }
